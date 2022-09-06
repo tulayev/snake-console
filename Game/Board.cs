@@ -87,8 +87,6 @@ namespace Game
                     _dir = Directions.Down;
                     break;
             }
-
-            Move();
         }
 
         private void ClearTail()
