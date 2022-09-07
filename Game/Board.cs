@@ -2,28 +2,25 @@ namespace Game
 {
     public class Board
     {
-        private readonly List<Position> _snake;
+        private readonly List<Position> _snake = new();
         
-        private readonly int _snakeLength;
+        private int _snakeLength = 5;
 
         private Position _currentPos;
 
-        private Directions _dir;
+        private Directions _dir = Directions.Right;
 
         public bool GameOver { get; set; } = false;
 
         public Board()
         {
             Console.CursorVisible = false;
-            _snake = new List<Position>();
-            _snakeLength = 3;
-            _dir = Directions.Right;
-            _currentPos = GetSpawnPosition();
         }
 
         public void DrawBoard()
         {
             Console.Clear();
+            Wall.DrawWall();
 
             foreach (var part in _snake)
             {
@@ -34,7 +31,10 @@ namespace Game
 
         public void Update()
         {
-            _currentPos =  new Position { X = _snake.LastOrDefault().X, Y = _snake.LastOrDefault().Y };
+            _currentPos = _snake.Count == 0
+                ? GetSpawnPosition()
+                : new Position { X = _snake.Last().X, Y = _snake.Last().Y };
+                
             Thread.Sleep(500);
 
             if (Console.KeyAvailable)
@@ -91,18 +91,16 @@ namespace Game
 
         private void ClearTail()
         {
-            while (_snake.Count > _snakeLength)
-            {
-                _snake.Remove(_snake.FirstOrDefault());
-            }
+            if (_snake.Count > _snakeLength)
+                _snake.Remove(_snake.First());
         }
 
-        private Position GetSpawnPosition()
+        private static Position GetSpawnPosition()
         {
             return new Position
             {
-                X = 0,
-                Y = 0
+                X = 2,
+                Y = 2
             };
         }      
     }
